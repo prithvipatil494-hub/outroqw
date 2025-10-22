@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Personal Space</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      min-height: 100vh;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+      transition: background 0.8s ease;
+    }
+
+    body.menu-page {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    }
+
+    body.diary-page {
+      background: linear-gradient(to bottom, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      position: relative;
+    }
+
+    body.diary-page::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(2px 2px at 20% 30%, white, transparent),
+        radial-gradient(2px 2px at 60% 70%, white, transparent),
+        radial-gradient(1px 1px at 50% 50%, white, transparent),
+        radial-gradient(1px 1px at 80% 10%, white, transparent),
+        radial-gradient(2px 2px at 90% 60%, white, transparent),
+        radial-gradient(1px 1px at 33% 85%, white, transparent),
+        radial-gradient(1px 1px at 15% 90%, white, transparent);
+      background-size: 200% 200%;
+      animation: twinkle 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    body.todo-page {
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1d3e 50%, #162447 100%);
+      position: relative;
+    }
+
+    body.todo-page::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(74, 144, 226, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 144, 226, 0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    body.auth-page {
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    }
+
+    .floating-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .floating-item {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0.4;
+      animation: float 15s infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.4;
+      }
+      90% {
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .moon {
+      position: fixed;
+      top: 80px;
+      right: 100px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff9e6, #ffe8a3);
+      box-shadow: 0 0 60px rgba(255, 232, 163, 0.6),
+                  0 0 100px rgba(255, 232, 163, 0.4),
+                  inset -10px -10px 30px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 50px 60px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      transition: all 0.5s ease;
+    }
+
+    body.diary-page .container {
+      background: linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 100%);
+      border: 2px solid rgba(255, 232, 163, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                  0 0 40px rgba(255, 232, 163, 0.2);
+    }
+
+    body.todo-page .container {
+      background: linear-gradient(135deg, rgba(26, 35, 56, 0.95) 0%, rgba(31, 43, 66, 0.95) 100%);
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                  0 0 40px rgba(74, 144, 226, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      color: #667eea;
+      margin-bottom: 10px;
+      font-size: 2.8em;
+      font-weight: 400;
+      font-family: 'Brush Script MT', cursive;
+      text-shadow: 2px 2px 4px rgba(102, 126, 234, 0.3);
+      transition: all 0.5s ease;
+    }
+
+    body.diary-page h1 {
+      color: #ffe8a3;
+      text-shadow: 0 0 20px rgba(255, 232, 163, 0.5),
+                   2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    body.todo-page h1 {
+      color: #4a90e2;
+      text-shadow: 0 0 20px rgba(74, 144, 226, 0.5),
+                   2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #764ba2;
+      margin-bottom: 40px;
+      font-size: 1em;
+      font-style: italic;
+      transition: all 0.5s ease;
+    }
+
+    body.diary-page .subtitle {
+      color: #d4c5a0;
+    }
+
+    body.todo-page .subtitle {
+      color: #7ba8d4;
+    }
+
+    .nav-section {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 18px 45px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      font-weight: 600;
+      font-family: 'Georgia', serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .nav-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+    }
+
+    .nav-btn.diary-btn {
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+    }
+
+    .nav-btn.diary-btn:hover {
+      box-shadow: 0 12px 35px rgba(255, 107, 157, 0.6);
+    }
+
+    .nav-btn.todo-btn {
+      background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+    }
+
+    .nav-btn.todo-btn:hover {
+      box-shadow: 0 12px 35px rgba(74, 144, 226, 0.6);
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 12px 30px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-family: 'Georgia', serif;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateX(-5px);
+    }
+
+    body.diary-page .back-btn {
+      border-color: rgba(255, 232, 163, 0.5);
+      color: #ffe8a3;
+    }
+
+    body.diary-page .back-btn:hover {
+      background: rgba(255, 232, 163, 0.1);
+      border-color: #ffe8a3;
+    }
+
+    body.todo-page .back-btn {
+      border-color: rgba(74, 144, 226, 0.5);
+      color: #4a90e2;
+    }
+
+    body.todo-page .back-btn:hover {
+      background: rgba(74, 144, 226, 0.1);
+      border-color: #4a90e2;
+    }
+
+    .auth-section {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .auth-section p {
+      margin-bottom: 30px;
+      color: #764ba2;
+      font-size: 1.2em;
+      font-style: italic;
+    }
+
+    .google-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 18px 50px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      font-weight: 600;
+      font-family: 'Georgia', serif;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .google-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #764ba2;
+      font-size: 1.2em;
+      font-style: italic;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 35px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      transition: all 0.5s ease;
+    }
+
+    body.diary-page .user-info {
+      background: rgba(255, 232, 163, 0.1);
+      border-color: rgba(255, 232, 163, 0.3);
+    }
+
+    body.todo-page .user-info {
+      background: rgba(74, 144, 226, 0.1);
+      border-color: rgba(74, 144, 226, 0.3);
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 3px solid #667eea;
+      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+    }
+
+    body.diary-page .avatar {
+      border-color: #ffe8a3;
+      box-shadow: 0 3px 10px rgba(255, 232, 163, 0.5);
+    }
+
+    body.todo-page .avatar {
+      border-color: #4a90e2;
+      box-shadow: 0 3px 10px rgba(74, 144, 226, 0.5);
+    }
+
+    .user-info span {
+      flex: 1;
+      font-weight: 600;
+      color: #667eea;
+      font-size: 1.1em;
+    }
+
+    body.diary-page .user-info span {
+      color: #ffe8a3;
+    }
+
+    body.todo-page .user-info span {
+      color: #4a90e2;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-family: 'Georgia', serif;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .input-section {
+      margin-bottom: 35px;
+    }
+
+    .date-label {
+      color: #764ba2;
+      font-size: 0.9em;
+      margin-bottom: 8px;
+      font-style: italic;
+      display: block;
+      transition: all 0.5s ease;
+    }
+
+    body.diary-page .date-label {
+      color: #d4c5a0;
+    }
+
+    body.todo-page .date-label {
+      color: #7ba8d4;
+    }
+
+    .textarea, .text-input {
+      width: 100%;
+      padding: 20px;
+      border: 2px solid rgba(102, 126, 234, 0.3);
+      border-radius: 10px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      transition: all 0.3s ease;
+      font-family: 'Georgia', serif;
+      line-height: 1.8;
+      resize: vertical;
+    }
+
+    .textarea {
+      min-height: 120px;
+    }
+
+    .text-input {
+      min-height: 60px;
+    }
+
+    body.diary-page .textarea {
+      background: rgba(44, 62, 80, 0.8);
+      color: #f5f5f5;
+      border-color: rgba(255, 232, 163, 0.3);
+    }
+
+    body.diary-page .textarea:focus {
+      border-color: #ffe8a3;
+      background: rgba(44, 62, 80, 0.9);
+      box-shadow: 0 0 20px rgba(255, 232, 163, 0.3);
+      outline: none;
+    }
+
+    body.todo-page .text-input {
+      background: rgba(26, 35, 56, 0.8);
+      color: #f5f5f5;
+      border-color: rgba(74, 144, 226, 0.3);
+    }
+
+    body.todo-page .text-input:focus {
+      border-color: #4a90e2;
+      background: rgba(26, 35, 56, 0.9);
+      box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+      outline: none;
+    }
+
+    .textarea::placeholder,
+    .text-input::placeholder {
+      color: #999;
+      font-style: italic;
+    }
+
+    body.diary-page .textarea::placeholder {
+      color: #a89968;
+    }
+
+    body.todo-page .text-input::placeholder {
+      color: #6b8caf;
+    }
+
+    .add-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 35px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      font-family: 'Georgia', serif;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    body.diary-page .add-btn {
+      background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+      box-shadow: 0 5px 15px rgba(255, 107, 157, 0.4);
+    }
+
+    body.diary-page .add-btn:hover {
+      box-shadow: 0 8px 25px rgba(255, 107, 157, 0.6);
+    }
+
+    body.todo-page .add-btn {
+      background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+      box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+    }
+
+    body.todo-page .add-btn:hover {
+      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.6);
+    }
+
+    .entries-title {
+      color: #667eea;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 400;
+      font-style: italic;
+      border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+      padding-bottom: 15px;
+      transition: all 0.5s ease;
+    }
+
+    body.diary-page .entries-title {
+      color: #ffe8a3;
+      border-bottom-color: rgba(255, 232, 163, 0.3);
+    }
+
+    body.todo-page .entries-title {
+      color: #4a90e2;
+      border-bottom-color: rgba(74, 144, 226, 0.3);
+    }
+
+    .list-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .list-container::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .list-container::-webkit-scrollbar-track {
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 10px;
+    }
+
+    .list-container::-webkit-scrollbar-thumb {
+      background: rgba(102, 126, 234, 0.5);
+      border-radius: 10px;
+    }
+
+    .list-container::-webkit-scrollbar-thumb:hover {
+      background: rgba(102, 126, 234, 0.7);
+    }
+
+    body.diary-page .list-container::-webkit-scrollbar-track {
+      background: rgba(255, 232, 163, 0.1);
+    }
+
+    body.diary-page .list-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 232, 163, 0.5);
+    }
+
+    body.todo-page .list-container::-webkit-scrollbar-track {
+      background: rgba(74, 144, 226, 0.1);
+    }
+
+    body.todo-page .list-container::-webkit-scrollbar-thumb {
+      background: rgba(74, 144, 226, 0.5);
+    }
+
+    .diary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 25px;
+      background: rgba(255, 232, 163, 0.15);
+      border-radius: 12px;
+      border: 2px solid rgba(255, 232, 163, 0.3);
+      transition: all 0.3s ease;
+      animation: slideIn 0.4s ease;
+      box-shadow: 0 4px 15px rgba(255, 232, 163, 0.2);
+    }
+
+    .diary-item:hover {
+      border-color: rgba(255, 232, 163, 0.6);
+      box-shadow: 0 8px 25px rgba(255, 232, 163, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px 25px;
+      background: rgba(74, 144, 226, 0.15);
+      border-radius: 12px;
+      border: 2px solid rgba(74, 144, 226, 0.3);
+      transition: all 0.3s ease;
+      animation: slideIn 0.4s ease;
+      box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+    }
+
+    .todo-item:hover {
+      border-color: rgba(74, 144, 226, 0.6);
+      box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .todo-item.completed {
+      opacity: 0.6;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .item-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #ff6b9d;
+    }
+
+    body.todo-page input[type="checkbox"] {
+      accent-color: #4a90e2;
+    }
+
+    .item-date {
+      font-size: 0.85em;
+      color: #d4c5a0;
+      font-style: italic;
+      flex: 1;
+    }
+
+    body.todo-page .item-date {
+      color: #7ba8d4;
+    }
+
+    .item-text {
+      color: #f5f5f5;
+      font-size: 16px;
+      line-height: 1.8;
+      font-family: 'Georgia', serif;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .diary-item .item-text {
+      padding-left: 32px;
+    }
+
+    .todo-item .item-text {
+      flex: 1;
+    }
+
+    .completed .item-text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .delete-btn {
+      background: rgba(255, 107, 157, 0.3);
+      color: #ffe8a3;
+      border: 2px solid rgba(255, 107, 157, 0.5);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .delete-btn:hover {
+      background: rgba(255, 107, 157, 0.5);
+      transform: rotate(90deg);
+      box-shadow: 0 3px 10px rgba(255, 107, 157, 0.4);
+    }
+
+    body.todo-page .delete-btn {
+      background: rgba(74, 144, 226, 0.3);
+      color: #4a90e2;
+      border-color: rgba(74, 144, 226, 0.5);
+    }
+
+    body.todo-page .delete-btn:hover {
+      background: rgba(74, 144, 226, 0.5);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.1em;
+      font-style: italic;
+    }
+
+    body.diary-page .empty-state {
+      color: rgba(255, 232, 163, 0.5);
+    }
+
+    body.todo-page .empty-state {
+      color: rgba(74, 144, 226, 0.5);
+    }
+
+    .error-message {
+      background: rgba(255, 107, 157, 0.2);
+      color: #ff6b9d;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      text-align: center;
+      border: 2px solid rgba(255, 107, 157, 0.4);
+    }
+
+    .quote {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+      margin: 30px 0;
+      font-size: 0.95em;
+      padding: 0 20px;
+    }
+
+    body.diary-page .quote {
+      color: rgba(255, 232, 163, 0.7);
+    }
+
+    body.todo-page .quote {
+      color: rgba(74, 144, 226, 0.7);
+    }
+
+    .feature-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .feature-card {
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+
+    .feature-card p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 25px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .nav-btn {
+        padding: 15px 35px;
+        font-size: 16px;
+      }
+
+      .moon {
+        width: 80px;
+        height: 80px;
+        right: 40px;
+        top: 60px;
+      }
+
+      .diary-item .item-text {
+        padding-left: 0;
+      }
+    }
+  </style>
+</head>
+<body class="menu-page">
+  <div class="floating-elements" id="floatingElements"></div>
+  <div class="moon hidden" id="moon"></div>
+
+  <div class="container">
+    <div id="loadingSection" class="loading">
+      <p>✨ Opening your personal space...</p>
+    </div>
+
+    <div id="authSection" class="auth-section hidden">
+      <h1>✨ Welcome ✨</h1>
+      <p class="subtitle">Your personal space awaits</p>
+      <a href="/auth/google" class="google-btn">Sign in with Google</a>
+      <div id="authError" class="error-message hidden"></div>
+    </div>
+
+    <div id="mainMenu" class="hidden">
+      <div class="user-info">
+        <img id="userAvatar" class="avatar" src="" alt="User">
+        <span id="userName"></span>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
+      
+      <h1>✨ My Personal Space ✨</h1>
+      <p class="subtitle">Where thoughts and tasks come together</p>
+      
+      <div class="nav-section">
+        <button class="nav-btn diary-btn" id="diaryBtn">📖 My Diary</button>
+        <button class="nav-btn todo-btn" id="todoBtn">✅ My Tasks</button>
+      </div>
+
+      <div class="feature-cards">
+        <div class="feature-card">
+          <h3>📖 Diary</h3>
+          <p>Capture your thoughts, feelings, and daily experiences in your private digital journal.</p>
+        </div>
+        <div class="feature-card">
+          <h3>✅ Tasks</h3>
+          <p>Organize your to-dos, track your progress, and stay on top of what matters.</p>
+        </div>
+      </div>
+      
+      <div class="quote">
+        "The secret of getting ahead is getting started." - Mark Twain
+      </div>
+    </div>
+
+    <div id="diaryPage" class="hidden">
+      <button class="back-btn" id="backFromDiary">← Back to Menu</button>
+      
+      <div class="user-info">
+        <img id="diaryUserAvatar" class="avatar" src="" alt="User">
+        <span id="diaryUserName"></span>
+      </div>
+
+      <h1>📖 My Diary</h1>
+      <p class="subtitle">Pour your heart out...</p>
+
+      <div class="input-section">
+        <label class="date-label">Today is: <span id="diaryDate"></span></label>
+        <textarea class="textarea" id="diaryInput" placeholder="Dear Diary, today I..."></textarea>
+        <button class="add-btn" id="addDiaryBtn">✨ Save Entry</button>
+      </div>
+
+      <h2 class="entries-title">My Diary Entries</h2>
+      <div class="list-container" id="diaryList">
+        <div class="empty-state">No entries yet. Start writing your story! ✨</div>
+      </div>
+
+      <div class="quote">
+        "Writing is the painting of the voice." - Voltaire
+      </div>
+    </div>
+
+    <div id="todoPage" class="hidden">
+      <button class="back-btn" id="backFromTodo">← Back to Menu</button>
+      
+      <div class="user-info">
+        <img id="todoUserAvatar" class="avatar" src="" alt="User">
+        <span id="todoUserName"></span>
+      </div>
+
+      <h1>✅ My Tasks</h1>
+      <p class="subtitle">Let's get things done!</p>
+
+      <div class="input-section">
+        <label class="date-label">Today is: <span id="todoDate"></span></label>
+        <textarea class="text-input" id="todoInput" placeholder="What needs to be done?"></textarea>
+        <button class="add-btn" id="addTodoBtn">➕ Add Task</button>
+      </div>
+
+      <h2 class="entries-title">My Task List</h2>
+      <div class="list-container" id="todoList">
+        <div class="empty-state">No tasks yet. Add your first one! ✅</div>
+      </div>
+
+      <div class="quote">
+        "A goal without a plan is just a wish." - Antoine de Saint-Exupéry
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let diaryEntries = [];
+    let todoItems = [];
+
+    const loadingSection = document.getElementById('loadingSection');
+    const authSection = document.getElementById('authSection');
+    const mainMenu = document.getElementById('mainMenu');
+    const diaryPage = document.getElementById('diaryPage');
+    const todoPage = document.getElementById('todoPage');
+    const floatingElements = document.getElementById('floatingElements');
+    const moon = document.getElementById('moon');
+
+    function createFloatingElements() {
+      const symbols = ['✨', '💫', '⭐', '🌟', '💖', '🦋', '🌸', '🎨'];
+      for (let i = 0; i < 15; i++) {
+        const item = document.createElement('div');
+        item.className = 'floating-item';
+        item.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        item.style.left = Math.random() * 100 + '%';
+        item.style.animationDelay = Math.random() * 15 + 's';
+        item.style.animationDuration = (15 + Math.random() * 10) + 's';
+        floatingElements.appendChild(item);
+      }
+    }
+
+    createFloatingElements();
+
+    function showPage(page) {
+      document.body.className = '';
+      loadingSection.classList.add('hidden');
+      authSection.classList.add('hidden');
+      mainMenu.classList.add('hidden');
+      diaryPage.classList.add('hidden');
+      todoPage.classList.add('hidden');
+      moon.classList.add('hidden');
+
+      switch(page) {
+        case 'auth':
+          document.body.className = 'auth-page';
+          authSection.classList.remove('hidden');
+          break;
+        case 'menu':
+          document.body.className = 'menu-page';
+          mainMenu.classList.remove('hidden');
+          break;
+        case 'diary':
+          document.body.className = 'diary-page';
+          diaryPage.classList.remove('hidden');
+          moon.classList.remove('hidden');
+          updateDate('diaryDate');
+          loadDiaryEntries();
+          break;
+        case 'todo':
+          document.body.className = 'todo-page';
+          todoPage.classList.remove('hidden');
+          updateDate('todoDate');
+          loadTodoItems();
+          break;
+      }
+    }
+
+    function updateDate(elementId) {
+      const today = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById(elementId).textContent = today.toLocaleDateString('en-US', options);
+    }
+
+    function updateUserInfo(user) {
+      const avatars = document.querySelectorAll('.avatar');
+      const userNames = document.querySelectorAll('[id$="UserName"]');
+      
+      avatars.forEach(avatar => {
+        avatar.src = user.photo || 'https://via.placeholder.com/50';
+      });
+      
+      userNames.forEach(nameEl => {
+        nameEl.textContent = `Welcome, ${user.displayName || 'User'}!`;
+      });
+    }
+
+    async function checkAuth() {
+      try {
+        const response = await fetch('/auth/current-user', {
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          currentUser = await response.json();
+          updateUserInfo(currentUser);
+          showPage('menu');
+        } else {
+          showPage('auth');
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        showPage('auth');
+      }
+    }
+
+    checkAuth();
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      window.location.href = '/auth/logout';
+    });
+
+    document.getElementById('diaryBtn').addEventListener('click', () => showPage('diary'));
+    document.getElementById('todoBtn').addEventListener('click', () => showPage('todo'));
+    document.getElementById('backFromDiary').addEventListener('click', () => showPage('menu'));
+    document.getElementById('backFromTodo').addEventListener('click', () => showPage('menu'));
+
+    async function loadDiaryEntries() {
+      if (!currentUser) return;
+      
+      try {
+        const response = await fetch(`/api/diary/${currentUser.googleId}`, {
+          credentials: 'include'
+        });
+        diaryEntries = await response.json();
+        renderDiaryEntries();
+      } catch (error) {
+        console.error('Error loading diary entries:', error);
+      }
+    }
+
+    function renderDiaryEntries() {
+      const diaryList = document.getElementById('diaryList');
+      
+      if (diaryEntries.length === 0) {
+        diaryList.innerHTML = '<div class="empty-state">No entries yet. Start writing your story! ✨</div>';
+        return;
+      }
+
+      diaryList.innerHTML = diaryEntries.map(entry => `
+        <div class="diary-item">
+          <div class="item-header">
+            <span class="item-date">📅 ${new Date(entry.date).toLocaleDateString('en-US', { 
+              weekday: 'short', 
+              year: 'numeric', 
+              month: 'short', 
+              day: 'numeric' 
+            })}</span>
+            <button class="delete-btn" onclick="deleteDiaryEntry('${entry._id}')">×</button>
+          </div>
+          <div class="item-text">${escapeHtml(entry.content)}</div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('addDiaryBtn').addEventListener('click', async () => {
+      const input = document.getElementById('diaryInput');
+      const content = input.value.trim();
+      
+      if (!content) return;
+      
+      try {
+        const response = await fetch('/api/diary', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            userId: currentUser.googleId,
+            content: content,
+            date: new Date().toISOString()
+          })
+        });
+        
+        if (response.ok) {
+          input.value = '';
+          await loadDiaryEntries();
+        }
+      } catch (error) {
+        console.error('Error adding diary entry:', error);
+      }
+    });
+
+    window.deleteDiaryEntry = async (id) => {
+      if (!confirm('Delete this diary entry?')) return;
+      
+      try {
+        const response = await fetch(`/api/diary/${id}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          await loadDiaryEntries();
+        }
+      } catch (error) {
+        console.error('Error deleting diary entry:', error);
+      }
+    };
+
+    async function loadTodoItems() {
+      if (!currentUser) return;
+      
+      try {
+        const response = await fetch(`/api/todos/${currentUser.googleId}`, {
+          credentials: 'include'
+        });
+        todoItems = await response.json();
+        renderTodoItems();
+      } catch (error) {
+        console.error('Error loading todos:', error);
+      }
+    }
+
+    function renderTodoItems() {
+      const todoList = document.getElementById('todoList');
+      
+      if (todoItems.length === 0) {
+        todoList.innerHTML = '<div class="empty-state">No tasks yet. Add your first one! ✅</div>';
+        return;
+      }
+
+      todoList.innerHTML = todoItems.map(item => `
+        <div class="todo-item ${item.completed ? 'completed' : ''}">
+          <input 
+            type="checkbox" 
+            ${item.completed ? 'checked' : ''} 
+            onchange="toggleTodo('${item._id}', this.checked)">
+          <div class="item-text">${escapeHtml(item.text)}</div>
+          <span class="item-date">📅 ${new Date(item.date).toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric' 
+          })}</span>
+          <button class="delete-btn" onclick="deleteTodo('${item._id}')">×</button>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('addTodoBtn').addEventListener('click', async () => {
+      const input = document.getElementById('todoInput');
+      const text = input.value.trim();
+      
+      if (!text) return;
+      
+      try {
+        const response = await fetch('/api/todos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            userId: currentUser.googleId,
+            text: text,
+            date: new Date().toISOString(),
+            completed: false
+          })
+        });
+        
+        if (response.ok) {
+          input.value = '';
+          await loadTodoItems();
+        }
+      } catch (error) {
+        console.error('Error adding todo:', error);
+      }
+    });
+
+    window.toggleTodo = async (id, completed) => {
+      try {
+        await fetch(`/api/todos/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ completed })
+        });
+        
+        await loadTodoItems();
+      } catch (error) {
+        console.error('Error toggling todo:', error);
+      }
+    };
+
+    window.deleteTodo = async (id) => {
+      if (!confirm('Delete this task?')) return;
+      
+      try {
+        const response = await fetch(`/api/todos/${id}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        
+        if (response.ok) {
+          await loadTodoItems();
+        }
+      } catch (error) {
+        console.error('Error deleting todo:', error);
+      }
+    };
+
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    document.getElementById('diaryInput').addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'Enter') {
+        document.getElementById('addDiaryBtn').click();
+      }
+    });
+
+    document.getElementById('todoInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('addTodoBtn').click();
+      }
+    });
+  </script>
+</body>
+</html>
